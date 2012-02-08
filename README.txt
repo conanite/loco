@@ -62,3 +62,7 @@ will produce something like this:
    .rake -        8 files,      383 lines
    .html -        4 files,      179 lines
      .js -       14 files,      840 lines
+
+== License
+
+Loco is released under the MIT license.
