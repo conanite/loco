@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["conanite"]
   s.email       = ["conan@conandalton.net"]
   s.homepage    = "https://github.com/conanite/loco"
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Produce statistics concerning numbers of lines of code in project files}
+  s.description = %q{Count lines of code in project files, excluding a bunch of common defaults, and show (a) for each N, how many files have N lines of code; (b) how many files of each type and average LOC per file of that type; (c) longest files and their length }
 
   s.rubyforge_project = "loco"
 
