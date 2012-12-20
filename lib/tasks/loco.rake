@@ -7,6 +7,7 @@ namespace :loco do
               /^public\/system/,
               /^public\/images/,
               /^public\/stylesheets/,
+              /^config\/newrelic.yml/,
               /^tmp/,
               /^coverage/,
               /^log/,
@@ -52,9 +53,13 @@ namespace :loco do
     def to_s
       "#{align lines} #{path}"
     end
+
+    def matches options
+      options[:size].blank? || (options[:size] == 0 && lines == 0)
+    end
   end
 
-  def analyse_loc regexp
+  def analyse_loc regexp, opts={ }
     @stats = []
     @exts = Hash.new { |h, k| h[k] = 0 }
     @ext_lines = Hash.new { |h, k| h[k] = 0 }
@@ -66,21 +71,19 @@ namespace :loco do
         path = full_path.sub(Rails.root.to_s + "/", '')
         unless exclude?(path) || !regexp.match(path)
           s = Stats.new(path)
-          @stats << s
-          @exts[File.extname(path)] += 1
-          @ext_lines[File.extname(path)] += s.lines
-          @sizes[s.lines] << path
-          total_lines += s.lines
+          if s.matches(opts)
+            @stats << s
+            @exts[File.extname(path)] += 1
+            @ext_lines[File.extname(path)] += s.lines
+            @sizes[s.lines] << path
+            total_lines += s.lines
+          end
         end
       end
     end
 
-    total = @stats.size
-    @stats = @stats.sort { |a, b| b.lines <=> a.lines }
-    @stats = @stats[0..30] if @stats.size > 30
-
-    puts "\n### longest files ###"
-    @stats.each { |s| puts s }
+    puts "\n### extensions ###"
+    @exts.each { |ext, count| puts "#{align ext} - #{align count} files, #{align @ext_lines[ext]} lines"}
 
     puts "\n### distribution ###"
     @sizes = @sizes.to_a.sort { |a, b|
@@ -91,8 +94,12 @@ namespace :loco do
       puts "#{align size} lines #{align files.size} #{"*" * files.size}"
     }
 
-    puts "\n### extensions ###"
-    @exts.each { |ext, count| puts "#{align ext} - #{align count} files, #{align @ext_lines[ext]} lines"}
+    total = @stats.size
+    @stats = @stats.sort { |a, b| b.lines <=> a.lines }
+    @stats = @stats[0..40] if @stats.size > 40
+
+    puts "\n### longest files ###"
+    @stats.each { |s| puts s }
 
     puts "\n### Total #{regexp.inspect} : #{total} files, #{total_lines} lines, #{"%.3f" % (1.0 * total_lines / total)} avg loc per file ###"
   end
@@ -112,12 +119,14 @@ namespace :loco do
   desc "show loc for all app/** files"
   task(:app) { analyse_loc /^app\// }
 
+  desc "show loc for all app/models/** files"
+  task(:models) { analyse_loc /^app\/models\// }
+
   desc "show loc for all spec/** files"
   task(:spec) { analyse_loc /^spec\// }
 
-  desc "show loc for all app/models/epg/** files"
-  task(:epg) { analyse_loc /^app\/models\/epg\// }
-
+  desc "show details for empty files"
+  task(:empty) { analyse_loc /.*/, :size => 0 }
 end
 
 task :loco => "loco:all"
