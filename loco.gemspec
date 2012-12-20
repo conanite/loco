@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = Loco::VERSION
   s.authors     = ["conanite"]
   s.email       = ["conan@conandalton.net"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/conanite/loco"
   s.summary     = %q{TODO: Write a gem summary}
   s.description = %q{TODO: Write a gem description}
 
