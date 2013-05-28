@@ -1,8 +1,8 @@
 namespace :loco do
   @exclude = [
               /^db\/schema.rb/,
-              /^db\/epg_timetable.yml/,
               /^db\/backups/,
+              /^db\/migrate/,
               /^vendor/,
               /^public\/system/,
               /^public\/images/,
@@ -55,7 +55,7 @@ namespace :loco do
     end
 
     def matches options
-      options[:size].blank? || (options[:size] == 0 && lines == 0)
+      options[:size].blank? || (options[:size] == lines)
     end
   end
 
@@ -96,7 +96,7 @@ namespace :loco do
 
     total = @stats.size
     @stats = @stats.sort { |a, b| b.lines <=> a.lines }
-    @stats = @stats[0..40] if @stats.size > 40
+    @stats = @stats[0..50] if @stats.size > 50
 
     puts "\n### longest files ###"
     @stats.each { |s| puts s }
@@ -116,17 +116,26 @@ namespace :loco do
   desc "show loc for all .haml files"
   task(:haml) { analyse_loc /.*\.haml$/ }
 
+  desc "show loc for all app/views files"
+  task(:views) { analyse_loc /^app\/views\// }
+
   desc "show loc for all app/** files"
   task(:app) { analyse_loc /^app\// }
 
   desc "show loc for all app/models/** files"
   task(:models) { analyse_loc /^app\/models\// }
 
+  desc "show loc for all db/migrate/** files"
+  task(:migrations) { analyse_loc /^db\/migrate\// }
+
   desc "show loc for all spec/** files"
   task(:spec) { analyse_loc /^spec\// }
 
   desc "show details for empty files"
   task(:empty) { analyse_loc /.*/, :size => 0 }
+
+  desc "show details for files of length specified by ENV['SIZE']"
+  task(:size) { analyse_loc /.*/, :size => ENV['SIZE'].to_i }
 end
 
 task :loco => "loco:all"
