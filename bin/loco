@@ -2,7 +2,6 @@
 # -*- mode: ruby -*-
 
 lib_path = File.join(File.dirname(File.dirname(__FILE__)), "lib")
-puts lib_path
 $LOAD_PATH.unshift(lib_path)
 
 require "loco"

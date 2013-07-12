@@ -1,4 +1,5 @@
 require "loco/version"
+require "loco/util"
 require "loco/stats"
 require "loco/counter"
 

@@ -1,13 +1,22 @@
+# -*- coding: utf-8 -*-
+
 module Loco
   class Stats
+    include Loco::Util
+
     attr_accessor :path, :lines
+
     def initialize(path)
       @path = path
       @lines = count_lines(path)
     end
 
+    def blank? str
+      str.nil? || str.strip == ""
+    end
+
     def count_lines path
-      File.read(path).split(/\n/).inject(0) {|sum, line| sum + (line.blank? ? 0 : 1) }
+      File.read(path).split(/\n/).inject(0) {|sum, line| sum + (blank?(line) ? 0 : 1) }
     end
 
     def to_s
@@ -15,7 +24,7 @@ module Loco
     end
 
     def matches options
-      options[:size].blank? || (options[:size] == lines)
+      options[:size].nil? || (options[:size] == lines)
     end
   end
 end

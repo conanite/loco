@@ -1,45 +1,43 @@
 module Loco
   class Counter
-    @exclude = [
-                /^db\/schema.rb/,
-                /^db\/backups/,
-                /^db\/migrate/,
-                /^vendor/,
-                /^public\/system/,
-                /^public\/images/,
-                /^public\/stylesheets/,
-                /^config\/newrelic.yml/,
-                /^tmp/,
-                /^coverage/,
-                /^log/,
-                /^doc/,
-                /^script/,
-                /^stories/,
-                /^static/,
-                /^public\/fonts/,
-                /\.#.+/,
-                /\.png/,
-                /\.pdf/,
-                /\.ico/,
-                /lib\/tasks\/.+\.txt/,
-                /^README/,
-                /^Gemfile.lock/,
-                /^public\/javascripts\/jquery/
+    include Loco::Util
+
+    EXCLUDE = [
+               /\.gem/,
+               /^db\/schema.rb/,
+               /^db\/backups/,
+               /^db\/migrate/,
+               /^vendor/,
+               /^public\/system/,
+               /^public\/images/,
+               /^public\/stylesheets/,
+               /^config\/newrelic.yml/,
+               /^tmp/,
+               /^coverage/,
+               /^log/,
+               /^doc/,
+               /^script/,
+               /^stories/,
+               /^static/,
+               /^public\/fonts/,
+               /\.#.+/,
+               /\.png/,
+               /\.pdf/,
+               /\.ico/,
+               /lib\/tasks\/.+\.txt/,
+               /^README/,
+               /^Gemfile.lock/,
+               /^public\/javascripts\/jquery/
               ]
 
     def exclude? path
-      @exclude.each { |regex|
+      EXCLUDE.each { |regex|
         if path =~ regex
           return true
         end
       }
       false
     end
-
-    def align x
-      x.to_s.rjust(8, " ")
-    end
-
 
     def analyse_loc opts={ }
       regexp = opts[:pattern]
