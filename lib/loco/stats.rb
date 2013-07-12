@@ -17,6 +17,14 @@ module Loco
 
     def count_lines path
       File.read(path).split(/\n/).inject(0) {|sum, line| sum + (blank?(line) ? 0 : 1) }
+    rescue Exception => e
+      puts "ERROR: reading #{path}: #{e.message}"
+      puts ""
+      puts "consider adding this line to your .loco:"
+      puts ""
+      puts "Loco::Counter::EXCLUDE << /^#{path.gsub /\//, "\\/"}/"
+      puts ""
+      0
     end
 
     def to_s
