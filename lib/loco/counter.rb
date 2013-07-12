@@ -49,9 +49,10 @@ module Loco
       @sizes = Hash.new { |h, k| h[k] = [] }
       total_lines = 0
 
-      Dir.glob("#{Rails.root}/**/*").each do |full_path|
+      here = File.expand_path "."
+      Dir.glob("#{here}/**/*").each do |full_path|
         unless File.stat(full_path).directory?
-          path = full_path.sub(Rails.root.to_s + "/", '')
+          path = full_path.sub("#{here}/", '')
           unless exclude?(path) || !regexp.match(path)
             s = Stats.new(path)
             if s.matches(opts)
