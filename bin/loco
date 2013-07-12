@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
 
+lib_path = File.join(File.dirname(File.dirname(__FILE__)), "lib")
+puts lib_path
+$LOAD_PATH.unshift(lib_path)
+
+require "loco"
+
 patterns = {
   :all       =>  { :pattern => /.*/               },
   :js        =>  { :pattern => /.*\.js$/          },
@@ -30,6 +36,6 @@ help = {
   :help => "show this help"
 }
 
-command = ARGV[0].to_sym
+command = (ARGV[0] || "all").to_sym
 Loco::Counter.new.analyse_loc patterns[command]
 
