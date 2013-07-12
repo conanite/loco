@@ -6,6 +6,9 @@ $LOAD_PATH.unshift(lib_path)
 
 require "loco"
 
+settings = "./.loco"
+load settings if File.exist?(settings)
+
 patterns = {
   :all       =>  { :pattern => /.*/               },
   :js        =>  { :pattern => /.*\.js$/          },
