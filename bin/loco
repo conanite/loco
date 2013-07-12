@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby -*-
+
+patterns = {
+  :all       =>  { :pattern => /.*/               },
+  :js        =>  { :pattern => /.*\.js$/          },
+  :rb        =>  { :pattern => /.*\.rb$/          },
+  :haml      =>  { :pattern => /.*\.haml$/        },
+  :views     =>  { :pattern => /^app\/views\//    },
+  :app       =>  { :pattern => /^app\//           },
+  :models    =>  { :pattern => /^app\/models\//   },
+  :migrations=>  { :pattern => /^db\/migrate\//   },
+  :spec      =>  { :pattern => /^spec\//          },
+  :empty     =>  { :pattern => /.*/, :size => 0   },
+  :size      =>  { :pattern => /.*/, :size => ARGV[1].to_i }
+}
+
+help = {
+  :all => "show loc for all files",
+  :js => "show loc for all .js files",
+  :rb => "show loc for all .rb files",
+  :haml => "show loc for all .haml files",
+  :views => "show loc for all app/views files",
+  :app => "show loc for all app/** files",
+  :models => "show loc for all app/models/** files",
+  :migrations => "show loc for all db/migrate/** files",
+  :spec => "show loc for all spec/** files",
+  :empty => "show details for empty files",
+  :size => "show details for files of length specified by ENV['SIZE']",
+  :help => "show this help"
+}
+
+command = ARGV[0].to_sym
+Loco::Counter.new.analyse_loc patterns[command]
+
