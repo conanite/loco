@@ -3,6 +3,7 @@ module Loco
     include Loco::Util
 
     EXCLUDE = [
+               /\.sqlite3/,
                /\.gem/,
                /^db\/schema.rb/,
                /^db\/backups/,
