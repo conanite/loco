@@ -9,20 +9,6 @@ require "loco"
 settings = "./.loco"
 load settings if File.exist?(settings)
 
-patterns = {
-  :all       =>  { :pattern => /.*/               },
-  :js        =>  { :pattern => /.*\.js$/          },
-  :rb        =>  { :pattern => /.*\.rb$/          },
-  :haml      =>  { :pattern => /.*\.haml$/        },
-  :views     =>  { :pattern => /^app\/views\//    },
-  :app       =>  { :pattern => /^app\//           },
-  :models    =>  { :pattern => /^app\/models\//   },
-  :migrations=>  { :pattern => /^db\/migrate\//   },
-  :spec      =>  { :pattern => /^spec\//          },
-  :empty     =>  { :pattern => /.*/, :size => 0   },
-  :size      =>  { :pattern => /.*/, :size => ARGV[1].to_i }
-}
-
 help = {
   :all => "show loc for all files",
   :js => "show loc for all .js files",
@@ -34,10 +20,8 @@ help = {
   :migrations => "show loc for all db/migrate/** files",
   :spec => "show loc for all spec/** files",
   :empty => "show details for empty files",
-  :size => "show details for files of length specified by ENV['SIZE']",
+  :size => "show details for files of length specified by ENV['SIZE'] ; e.g. `SIZE=1 loco size` to obtain info about files only 1 line long",
   :help => "show this help"
 }
 
-command = (ARGV[0] || "all").to_sym
-Loco::Counter.new.analyse_loc patterns[command]
-
+Loco::Counter.new.analyse_command ARGV[0]

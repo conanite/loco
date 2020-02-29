@@ -8,7 +8,7 @@ module Loco
 
     def initialize(path)
       @path = path
-      @lines = count_lines(path)
+      @lines = File.file?(path) ? count_lines(path) : 0
     end
 
     def blank? str

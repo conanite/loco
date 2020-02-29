@@ -23,13 +23,27 @@ module Loco
                /^public\/fonts/,
                /\.#.+/,
                /\.png/,
-               /\.pdf/,
+               /\.pdf$/,
                /\.ico/,
                /lib\/tasks\/.+\.txt/,
                /^README/,
                /^Gemfile.lock/,
                /^public\/javascripts\/jquery/
               ]
+
+    PATTERNS = {
+      :all       =>  { :pattern => /.*/               },
+      :js        =>  { :pattern => /.*\.js$/          },
+      :rb        =>  { :pattern => /.*\.rb$/          },
+      :haml      =>  { :pattern => /.*\.haml$/        },
+      :views     =>  { :pattern => /^app\/views\//    },
+      :app       =>  { :pattern => /^app\//           },
+      :models    =>  { :pattern => /^app\/models\//   },
+      :migrations=>  { :pattern => /^db\/migrate\//   },
+      :spec      =>  { :pattern => /^spec\//          },
+      :empty     =>  { :pattern => /.*/, :size => 0   },
+      :size      =>  { :pattern => /.*/, :size => ENV["SIZE"].to_i }
+    }
 
     def exclude? path
       EXCLUDE.each { |regex|
@@ -38,6 +52,11 @@ module Loco
         end
       }
       false
+    end
+
+    def analyse_command command=nil
+      command ||= :all
+      analyse_loc PATTERNS[command.to_sym]
     end
 
     def analyse_loc opts={ }
@@ -87,4 +106,8 @@ module Loco
       puts "\n### Total #{regexp.inspect} : #{total} files, #{total_lines} lines, #{"%.3f" % (1.0 * total_lines / total)} avg loc per file ###"
     end
   end
+end
+
+
+def self.load_dot_loco
 end
